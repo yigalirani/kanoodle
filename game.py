@@ -87,6 +87,7 @@ def get_call_rotations(piece):
     add(piece)
     add(horizintal_mirror(piece))
     add(vertical_mirror(piece))
+    add(horizintal_mirror(vertical_mirror(piece)))
     piece=rotate(piece)
   return h.values()
   
