@@ -63,6 +63,34 @@ def trim_shape(x):
   ans= [pad(line,n)for line in x.split('\n') if trim_line(line)!='']
   #print(ans)
   return ans
+def horizintal_mirror(piece):
+  return [x[::-1] for x in piece]
+def vertical_mirror(piece):
+  return piece[::-1]
+
+def rotate(piece):
+  n=len(piece[0])
+  ans=[[] for _ in range(n) ]
+  for line in piece:
+    for i,col in enumerate(line):
+      ans[i].append(col)
+  ans= [''.join(x) for x in ans]
+  return ans
+def to_str(piece):
+  return '\n'.join(piece)
+
+def get_call_rotations(piece):
+  h={}
+  def add(x):
+    h[to_str(x)]=x
+  for i in range(4):
+    add(piece)
+    add(horizintal_mirror(piece))
+    add(vertical_mirror(piece))
+    piece=rotate(piece)
+  return h.values()
+  
+
 
 def print_piece(v):
   print('.'*(len(v[0])+2))
@@ -81,5 +109,8 @@ def print_piece(v):
   print('.'*(m+2),'\n'  )
 def main():
   for x in input.split('\n\n'):
-    print_piece(trim_shape(x))
+    r=get_call_rotations(trim_shape(x))
+    print(len(r),'='*50)
+    for r2 in r:
+      print_piece(r2)
 main()
