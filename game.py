@@ -125,6 +125,27 @@ def make_board(n,m):
 import copy
 def copy_board(board):
   return copy.deepcopy(board)
+def has_islands(board):
+  m=len(board)
+  n=len(board[0])
+  mark=[[' ']*len(line) for line in board]
+  def count_island(i,j):
+    if i<0 or j<0 or j>=n or i>=m:
+      return 0
+    nonlocal mark,board
+    if mark[i][j]==' ' and board[i][j]==' ':
+      mark[i][j]='*'
+      return 1 +count_island(i-1,j)+count_island(i+1,j)+count_island(i,j-1)+count_island(i,j+1)
+    return 0
+
+    
+  for i in range(m):
+    for j in range(n):
+      if mark[i][j]==' ' and board[i][j]==' ':
+        ans=count_island(i,j)
+        if ans<3:
+          return True
+  return False
 def get_placements(board,pivot_rotations):
   m=len(board)
   n=len(board[0])
@@ -137,17 +158,16 @@ def get_placements(board,pivot_rotations):
           for i1 in range(m1):
             for j1 in range(n1):
               if r[i1][j1]!=' '  and board[i+i1][j+j1]!=' ' :
-                return False
-          return True
-
-         
-        if good_placement():
+                return
           new_board=copy_board(board)
           for i1 in range(m1):
             for j1 in range(n1):
               if r[i1][j1]!=' ':
                 new_board[i+i1][j+j1]=r[i1][j1]
-          yield new_board
+          if not has_islands(new_board):
+            yield new_board
+
+        yield from good_placement()
 
 def main():
   r=make_rotations()
