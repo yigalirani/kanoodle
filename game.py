@@ -78,7 +78,10 @@ def rotate(piece):
   return ans
 def to_str(piece):
   return '\n'.join(piece)
-
+def print_board(board):
+  print('---------------')
+  for line in board:
+    print(''.join(line))
 def get_call_rotations(piece):
   h={}
   def add(x):
@@ -108,10 +111,69 @@ def print_piece(v):
     line=line+(m-len(line))*' '
     print('.'+line+'.')
   print('.'*(m+2),'\n'  )
-def main():
+def make_rotations():
+  ans=[]
   for x in input.split('\n\n'):
     r=get_call_rotations(trim_shape(x))
+    ans.append(list(r))
     print(len(r),'='*50)
     for r2 in r:
       print_piece(r2)
+  return ans
+def make_board(n,m):
+  return [[' ']*n for i in range(m)]
+import copy
+def copy_board(board):
+  return copy.deepcopy(board)
+def get_placements(board,pivot_rotations):
+  m=len(board)
+  n=len(board[0])
+  for r in pivot_rotations:
+    m1=len(r)
+    n1=len(r[0])
+    for i in range(0,m-m1+1):
+      for j in range(0,n-n1+1):
+        def good_placement():
+          for i1 in range(m1):
+            for j1 in range(n1):
+              if r[i1][j1]!=' '  and board[i+i1][j+j1]!=' ' :
+                return False
+          return True
+
+         
+        if good_placement():
+          new_board=copy_board(board)
+          for i1 in range(m1):
+            for j1 in range(n1):
+              if r[i1][j1]!=' ':
+                new_board[i+i1][j+j1]=r[i1][j1]
+          yield new_board
+
+def main():
+  r=make_rotations()
+  board=make_board(11,5)
+  left=list(range(len(r)))
+  count=0
+  def f(board,left):
+    nonlocal count
+    count+=1
+    if count%10000==0:
+      print(left)
+      print_board(board)    
+
+    if (len(left)==0):
+      print('solution!')
+      print_board(board)
+      exit(1)
+    pivot=left[0]
+    rest=left[1:]
+    pivot_rotations=r[pivot]
+    for new_board in get_placements(board,pivot_rotations):
+
+      f(new_board,rest)
+  f(board,left)      
 main()
+    
+    
+
+    
