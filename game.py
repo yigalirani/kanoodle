@@ -78,6 +78,17 @@ def rotate(piece):
   return ans
 def to_str(piece):
   return '\n'.join(piece)
+def print_board_html(board,i):
+  ans=[]
+  ans.append(f"solution {i}<br> <table>")
+  for row in board:
+    ans.append('<tr>')
+    for cell in row:
+      ans.append(f"<td class='s{cell}'></td>")
+    ans.append('</tr>')
+  ans.append('</table>\n')
+  with open('solution.html','a') as fd:
+    fd.writelines(ans)
 def print_board(board):
   print('---------------')
   for line in board:
@@ -172,23 +183,35 @@ def get_placements(board,pivot_rotations):
             yield new_board
 
         yield from good_placement()
+def write_style():
+    with open('solution.html','w') as fd:
+      fd.write('''
+<link rel="stylesheet" href="style.css">
 
+</style>
+''')
 def main():
+  write_style()
   r=make_rotations()
   board=make_board(11,5)
   left=list(range(len(r)))
   count=0
+  i=0
   def f(board,left):
     nonlocal count
     count+=1
-    if count%1000==0:
+    if False and count%1000==0:
       print(left)
       print_board(board)    
 
     if (len(left)==0):
       print('solution!')
       print_board(board)
-      exit(1)
+      nonlocal i
+      i+=1
+      print_board_html(board,i)
+      return
+      #exit(1)
     pivot=left[0]
     rest=left[1:]
     pivot_rotations=r[pivot]
