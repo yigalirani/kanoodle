@@ -116,9 +116,9 @@ def make_rotations():
   for x in input.split('\n\n'):
     r=get_call_rotations(trim_shape(x))
     ans.append(list(r))
-    print(len(r),'='*50)
+    '''print(len(r),'='*50)
     for r2 in r:
-      print_piece(r2)
+      print_piece(r2)'''
   return ans
 def make_board(n,m):
   return [[' ']*n for i in range(m)]
@@ -139,12 +139,16 @@ def has_islands(board):
     return 0
 
     
+  num_islands=0
   for i in range(m):
     for j in range(n):
       if mark[i][j]==' ' and board[i][j]==' ':
         ans=count_island(i,j)
-        if ans<3:
+        #if ans<3:
+        #  return True
+        if num_islands:
           return True
+        num_islands+=1
   return False
 def get_placements(board,pivot_rotations):
   m=len(board)
@@ -177,7 +181,7 @@ def main():
   def f(board,left):
     nonlocal count
     count+=1
-    if count%10000==0:
+    if count%1000==0:
       print(left)
       print_board(board)    
 
